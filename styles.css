@@ -425,13 +425,33 @@ code.npub {
 
 .hero-subtitle { animation-fill-mode: forwards; }
 
-/* === TOC collapse (desktop, via hamburger) === */
-body.toc-collapsed .toc {
-    display: none;
-}
+/* === TOC collapse (desktop, via hamburger) — fluid === */
+@media (min-width: 1001px) {
+    .layout {
+        transition: grid-template-columns 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                    gap 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-body.toc-collapsed .layout {
-    grid-template-columns: minmax(0, 720px);
+    .toc {
+        white-space: nowrap;
+        overflow: hidden;
+        visibility: visible;
+        transition: opacity 0.35s ease, transform 0.35s ease,
+                    visibility 0s linear 0s;
+    }
+
+    body.toc-collapsed .layout {
+        grid-template-columns: 0px minmax(0, 720px);
+        gap: 0 0;
+    }
+
+    body.toc-collapsed .toc {
+        opacity: 0;
+        transform: translateX(-16px);
+        visibility: hidden;
+        transition: opacity 0.35s ease, transform 0.35s ease,
+                    visibility 0s linear 0.35s;
+    }
 }
 
 /* === Reduced motion === */
@@ -442,6 +462,9 @@ body.toc-collapsed .layout {
         opacity: 1;
         transform: none;
         animation: none;
+        transition: none;
+    }
+    .layout, .toc {
         transition: none;
     }
 }
