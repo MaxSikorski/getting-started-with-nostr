@@ -4,7 +4,7 @@ A plain-English guide to joining Nostr: understanding your keys, picking a clien
 your key with a signer, finding people, and sending your first zap. Written and maintained by
 [Max Sikorski](https://github.com/MaxSikorski) for the Bitcoin & Nostr weekly meetup.
 
-**Read it here:** open `index.html` — or the hosted version on GitHub Pages.
+**Read it here:** [Getting Started with Nostr 101](https://maxsikorski.github.io/getting-started-with-nostr/)
 
 ## Works offline, on purpose
 
