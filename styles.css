@@ -1,0 +1,493 @@
+/* ============================================================
+   Sikorski Design System — Getting Started with Nostr
+   Monochrome base, Nostr purple as the single voice of color.
+   Zero external dependencies: system font stack, no CDN.
+   ============================================================ */
+
+/* === Reset === */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* === Color System === */
+:root {
+    --theme-black: #000000;
+    --theme-dark-gray: #1c1c1e;
+    --theme-light-gray: #f5f5f7;
+    --theme-white: #ffffff;
+
+    --purple: #a06af9;
+    --purple-soft: rgba(160, 106, 249, 0.35);
+    --purple-faint: rgba(160, 106, 249, 0.12);
+
+    --bg-color: var(--theme-black);
+    --text-color: var(--theme-white);
+    --card-bg: rgba(28, 28, 30, 0.7);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --divider: rgba(255, 255, 255, 0.08);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --code-bg: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] {
+    --bg-color: var(--theme-light-gray);
+    --text-color: var(--theme-black);
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --card-border: rgba(0, 0, 0, 0.1);
+    --divider: rgba(0, 0, 0, 0.08);
+    --text-muted: rgba(0, 0, 0, 0.5);
+    --code-bg: rgba(0, 0, 0, 0.06);
+    --purple-soft: rgba(160, 106, 249, 0.45);
+    --purple-faint: rgba(160, 106, 249, 0.10);
+}
+
+/* === Base === */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.5s ease, color 0.5s ease;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+h1, h2, h3 {
+    letter-spacing: -0.04em;
+    font-weight: 700;
+}
+
+p {
+    line-height: 1.7;
+    opacity: 0.85;
+}
+
+a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--purple-soft);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.25s ease, color 0.25s ease;
+}
+
+a:hover {
+    color: var(--purple);
+    text-decoration-color: var(--purple);
+}
+
+code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    padding: 2px 7px;
+    border-radius: 6px;
+    word-break: break-all;
+}
+
+/* === Navigation === */
+.header-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 22px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: linear-gradient(to bottom, var(--bg-color) 55%, transparent);
+    transition: background-color 0.5s ease;
+}
+
+.nav-logo {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+}
+
+.nav-logo:hover {
+    color: var(--purple);
+}
+
+.nav-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.theme-toggle {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: border-color 0.25s ease, transform 0.4s ease;
+}
+
+.theme-toggle:hover {
+    border-color: var(--purple-soft);
+}
+
+#theme-toggle:hover {
+    transform: rotate(40deg);
+}
+
+/* === Hero === */
+.hero {
+    min-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 24px 60px;
+}
+
+.hero-kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+}
+
+.hero-title {
+    font-size: clamp(2.6rem, 7vw, 4.8rem);
+    line-height: 1.05;
+    max-width: 800px;
+}
+
+.hero-title .purple {
+    color: var(--purple);
+    text-shadow: 0 0 42px var(--purple-soft);
+}
+
+.hero-subtitle {
+    margin-top: 26px;
+    max-width: 540px;
+    font-size: 1.1rem;
+}
+
+.hero-cta {
+    margin-top: 42px;
+    display: inline-block;
+    padding: 14px 34px;
+    border-radius: 999px;
+    border: 1px solid var(--card-border);
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    text-decoration: none;
+    font-weight: 600;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.hero-cta:hover {
+    color: var(--text-color);
+    border-color: var(--purple-soft);
+    box-shadow: 0 0 30px var(--purple-faint);
+    transform: translateY(-2px);
+}
+
+/* === Layout: TOC + guide === */
+.layout {
+    display: grid;
+    grid-template-columns: 230px minmax(0, 720px);
+    gap: 60px;
+    justify-content: center;
+    padding: 40px 24px 120px;
+}
+
+.toc {
+    position: sticky;
+    top: 100px;
+    align-self: start;
+    font-size: 0.9rem;
+}
+
+.toc-label {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+}
+
+.toc ol {
+    list-style: none;
+    border-left: 1px solid var(--divider);
+}
+
+.toc li a {
+    display: block;
+    padding: 7px 0 7px 16px;
+    text-decoration: none;
+    color: var(--text-muted);
+    border-left: 2px solid transparent;
+    margin-left: -1.5px;
+    transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.toc li a:hover {
+    color: var(--text-color);
+}
+
+.toc li a.active {
+    color: var(--purple);
+    border-left-color: var(--purple);
+}
+
+/* === Guide sections === */
+.part {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--divider);
+}
+
+.part:last-of-type {
+    border-bottom: none;
+}
+
+.part h2 {
+    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+}
+
+.part-num {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--purple);
+    border: 1px solid var(--purple-soft);
+    border-radius: 10px;
+    padding: 3px 11px;
+    flex-shrink: 0;
+    box-shadow: 0 0 18px var(--purple-faint);
+}
+
+.part-lede {
+    font-size: 1.12rem;
+    font-weight: 500;
+    opacity: 1;
+    margin-bottom: 18px;
+}
+
+.part p + p,
+.part p + table,
+.part table + p,
+.part p + ol,
+.part ol + p,
+.part p + .callout,
+.part .callout + p {
+    margin-top: 18px;
+}
+
+/* === Callouts (glassmorphism) === */
+.callout {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-left: 3px solid var(--purple-soft);
+    border-radius: 16px;
+    padding: 22px 26px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    margin-top: 22px;
+}
+
+.callout.warn {
+    border-left-color: var(--purple);
+}
+
+.callout p {
+    opacity: 0.9;
+}
+
+/* === Rules list === */
+.rules {
+    list-style: none;
+    counter-reset: rule;
+    margin-top: 18px;
+}
+
+.rules li {
+    counter-increment: rule;
+    position: relative;
+    padding: 12px 0 12px 52px;
+    line-height: 1.65;
+    opacity: 0.9;
+}
+
+.rules li::before {
+    content: counter(rule);
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--purple);
+    border: 1px solid var(--purple-soft);
+    border-radius: 50%;
+}
+
+/* === Tables === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+th {
+    text-align: left;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--divider);
+}
+
+td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--divider);
+    vertical-align: top;
+}
+
+tr:hover td {
+    background: var(--purple-faint);
+}
+
+code.npub {
+    font-size: 0.72rem;
+}
+
+.aside {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* === Footer === */
+.guide-footer {
+    padding: 60px 0 0;
+    text-align: center;
+}
+
+.guide-footer p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.guide-footer p + p {
+    margin-top: 6px;
+}
+
+/* === Scroll reveals (no library; toggled by script.js) === */
+.part {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.part.revealed {
+    opacity: 1;
+    transform: none;
+}
+
+.hero-kicker, .hero-title, .hero-subtitle, .hero-cta {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: hero-in 1s ease forwards;
+}
+
+.hero-title   { animation-delay: 0.15s; }
+.hero-subtitle{ animation-delay: 0.3s; }
+.hero-cta     { animation-delay: 0.45s; }
+
+@keyframes hero-in {
+    to { opacity: 1; transform: none; }
+}
+
+.hero-subtitle { animation-fill-mode: forwards; }
+
+/* === TOC collapse (desktop, via hamburger) === */
+body.toc-collapsed .toc {
+    display: none;
+}
+
+body.toc-collapsed .layout {
+    grid-template-columns: minmax(0, 720px);
+}
+
+/* === Reduced motion === */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .part,
+    .hero-kicker, .hero-title, .hero-subtitle, .hero-cta {
+        opacity: 1;
+        transform: none;
+        animation: none;
+        transition: none;
+    }
+}
+
+/* === Responsive === */
+@media (max-width: 1000px) {
+    .layout {
+        grid-template-columns: minmax(0, 720px);
+    }
+    /* TOC becomes a drawer under the nav, opened by the hamburger */
+    .toc {
+        position: fixed;
+        top: 74px;
+        right: 20px;
+        width: min(320px, calc(100vw - 40px));
+        max-height: 70vh;
+        overflow-y: auto;
+        z-index: 95;
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 20px 24px;
+        background: var(--card-bg);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 24px var(--purple-faint);
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    body.toc-drawer .toc {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+    }
+    .toc ol { border-left: none; }
+    .toc li a { padding-left: 0; border-left: none; margin-left: 0; }
+    .toc li a.active { border-left: none; }
+}
+
+@media (max-width: 600px) {
+    .header-nav { padding: 16px 20px; }
+    .nav-logo { font-size: 0.85rem; }
+    .hero { min-height: 70vh; }
+    .part { padding: 44px 0; }
+    .part h2 { flex-direction: column; gap: 10px; align-items: flex-start; }
+    td, th { padding: 10px 8px; }
+    code.npub { font-size: 0.62rem; }
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A plain-English guide to joining Nostr: keys, clients, signers, zaps, and beyond. Works offline — download the zip and open this file anywhere.">
+    <meta name="theme-color" content="#000000">
+    <title>Getting Started with Nostr</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🟣</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="dark">
+
+    <nav class="header-nav">
+        <a href="#top" class="nav-logo">Getting Started with Nostr</a>
+        <div class="nav-actions">
+        <button id="toc-toggle" class="theme-toggle" aria-label="Toggle table of contents" aria-expanded="true" aria-controls="toc">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark and light mode">
+            <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+        </button>
+        </div>
+    </nav>
+
+    <header class="hero" id="top">
+        <p class="hero-kicker">A ten-minute path to owning your own corner of the internet</p>
+        <h1 class="hero-title">Getting started<br>with <span class="purple">Nostr</span></h1>
+        <p class="hero-subtitle">Keys, clients, signers, and your first zap — in the order we actually walk people through it at our weekly meetup.</p>
+        <a href="#why" class="hero-cta">Start reading</a>
+    </header>
+
+    <div class="layout">
+
+        <aside class="toc" id="toc" aria-label="Table of contents">
+            <p class="toc-label">Contents</p>
+            <ol>
+                <li><a href="#why">Why bother</a></li>
+                <li><a href="#keys">Understand your keys</a></li>
+                <li><a href="#clients">Pick your client</a></li>
+                <li><a href="#signer">Protect the key</a></li>
+                <li><a href="#first-hour">Your first hour</a></li>
+                <li><a href="#zaps">Zaps</a></li>
+                <li><a href="#beyond">Beyond the feed</a></li>
+                <li><a href="#troubleshooting">When things go wrong</a></li>
+                <li><a href="#offline">Take it with you</a></li>
+                <li><a href="#links">Every link</a></li>
+            </ol>
+        </aside>
+
+        <main class="guide">
+
+            <section id="why" class="part">
+                <h2><span class="part-num">0</span> Why bother</h2>
+                <p>Every account you have ever made lives on someone else's computer. Your Twitter handle, your Instagram, your YouTube channel: a company holds them, and a company can take them away. Most people know this in the abstract. It stops being abstract the first time you watch it happen to someone.</p>
+                <p>Nostr flips that. Your identity is a cryptographic key that you hold, your posts travel over independent relays, and the apps are just interchangeable windows onto the same network. Nobody can delete your account because nobody has your account. It's a protocol, like email, not a platform, like Twitter.</p>
+                <p>That one idea takes about ten minutes to put into practice. This guide is those ten minutes, written down.</p>
+                <div class="callout">
+                    <p>One more thing before we start: <strong>this whole guide works offline.</strong> Download the repository as a zip, unzip it, open <code>index.html</code>, and everything is right here on your phone or computer. No internet required after the download. That's on purpose, and by the end of the guide you'll understand why we build things that way. <a href="#offline">Jump to how</a>.</p>
+                </div>
+            </section>
+
+            <section id="keys" class="part">
+                <h2><span class="part-num">1</span> Understand your keys</h2>
+                <p class="part-lede">Read this before touching any app. When you join Nostr, an app will generate two keys for you, and everything that follows depends on knowing which is which.</p>
+                <p>Your <strong>npub</strong> is your public key. It starts with <code>npub1</code> and it's your handle: share it anywhere, print it on a business card, put it in your bio. People use it to find and follow you.</p>
+                <p>Your <strong>nsec</strong> is your private key. It starts with <code>nsec1</code> and it is your password, forever. There is no "forgot password" link, no support desk, no recovery email. Whoever holds the nsec IS you, and if it leaks, there's no taking it back.</p>
+                <p>So, three rules. I say these at every meetup and I mean all three:</p>
+                <ol class="rules">
+                    <li><strong>Back up the nsec on paper the moment it's created.</strong> Not a screenshot, not a note in your phone. Paper, written by hand, kept somewhere you'd keep a passport.</li>
+                    <li><strong>Never type the nsec into a website.</strong> No exceptions. A legitimate app will never need you to paste your private key into a web page.</li>
+                    <li><strong>Use a signer app</strong> so most apps never even see the key. That's <a href="#signer">Part 3</a>, and it's the step everyone skips. We won't.</li>
+                </ol>
+                <div class="callout">
+                    <p><strong>What's a relay?</strong> A relay is a simple server that stores and forwards notes, like a post office. You use several at once, they don't know each other, and any of them can be replaced. If one relay goes down or bans you, your identity and your followers come with you to the next one, because they were never the relay's to begin with. You don't need to configure anything about relays today; the apps pick sensible defaults. Just know they exist, because they're the reason no company sits in the middle of this network.</p>
+                </div>
+            </section>
+
+            <section id="clients" class="part">
+                <h2><span class="part-num">2</span> Pick your client</h2>
+                <p class="part-lede">A client is just an app that reads and writes to Nostr. You can switch any time and lose nothing, which takes the pressure off this choice.</p>
+                <p>Here's the stack I recommend to our members, based on what has actually stuck:</p>
+                <p><strong>On iPhone: <a href="https://damus.io" target="_blank" rel="noopener noreferrer">Damus</a> or <a href="https://primal.net" target="_blank" rel="noopener noreferrer">Primal</a>.</strong> Damus is the original iOS client, clean and focused. Primal is faster-moving, has prettier feeds, and ships a built-in Lightning wallet, which will matter in <a href="#zaps">Part 5</a>. Try Primal first if you want everything in one app; try Damus if you want the classic.</p>
+                <p><strong>On Android: <a href="https://amethyst.social/" target="_blank" rel="noopener noreferrer">Amethyst</a>.</strong> My favorite client, full stop, and the best thing on Android by far. Built by Vitor Pamplona, it does everything the network can do, and it pairs perfectly with Amber from <a href="#signer">Part 3</a>. If you'd rather start simpler, <a href="https://primal.net" target="_blank" rel="noopener noreferrer">Primal</a> works here too — and switching later costs you nothing.</p>
+                <p><strong>On a computer: <a href="https://nostrudel.ninja" target="_blank" rel="noopener noreferrer">noStrudel</a>, <a href="https://coracle.social" target="_blank" rel="noopener noreferrer">Coracle</a>, or <a href="https://primal.net" target="_blank" rel="noopener noreferrer">Primal on the web</a>.</strong> noStrudel and Coracle are for the technically curious: they expose more of how Nostr actually works. Primal's web app is the gentlest landing. All three run in your browser with nothing to install, and all three work with the signer extension from <a href="#signer">Part 3</a>, which is exactly how you should use them.</p>
+                <div class="callout warn">
+                    <p>When you open your chosen app for the first time, it will offer to create your account. It's generating that keypair from Part 1. Before you post anything, before you even set your profile picture: <strong>find where the app shows your nsec (usually Settings → Keys) and do the paper backup now.</strong> The moment where it's easy to skip is the moment it matters.</p>
+                </div>
+            </section>
+
+            <section id="signer" class="part">
+                <h2><span class="part-num">3</span> Protect the key with a signer</h2>
+                <p class="part-lede">This is the step everyone skips. We won't.</p>
+                <p>Here's the problem the signer solves. Over time you'll want to try lots of Nostr apps; that's the whole fun of it. If every app gets a copy of your nsec, then every app is a place your identity can leak from. The fix is one dedicated app that holds the key and signs on behalf of all the others, the way a bank app approves a payment: the requesting app asks, you approve, and the key itself never moves.</p>
+                <p><strong>On a computer: <a href="https://github.com/fiatjaf/nos2x" target="_blank" rel="noopener noreferrer">nos2x</a>.</strong> It's the original browser extension for this (the standard it implements is called NIP-07; <a href="https://chromewebstore.google.com/detail/nos2x/kpgefcfmnafjgpblomihpgmejjdanjjp" target="_blank" rel="noopener noreferrer">Chrome Web Store link</a>). Install it, import your key once, and from then on web clients like noStrudel, Coracle, and Primal will pop up a small "sign this?" request instead of ever asking for your nsec. If a website asks you to paste your private key while you have nos2x installed, that website has just told you everything you need to know about it.</p>
+                <p><strong>On Android: <a href="https://github.com/greenart7c3/Amber" target="_blank" rel="noopener noreferrer">Amber</a>.</strong> Amber is a dedicated key-holder that signs for every other Nostr app on your phone (available on F-Droid, the Zap Store, and Obtainium). It's open source, actively maintained, and this is the setup I'd call correct on Android: Amber holds the key, everything else asks Amber.</p>
+                <p><strong>On iPhone: honesty required.</strong> There's no Amber equivalent on iOS yet. Damus and Primal store your key in the phone's system keychain, which is decent, but it means the client app itself holds the key. That's a real trade-off, not a catastrophe: keep the paper backup, be picky about which iOS apps you give the key to, and know that better options are being built.</p>
+            </section>
+
+            <section id="first-hour" class="part">
+                <h2><span class="part-num">4</span> Your first hour</h2>
+                <p><strong>Set up your profile.</strong> Name, picture, a line about yourself. This takes two minutes and makes the next step work better, because people follow back humans, not blank avatars.</p>
+                <p><strong>Get verified, eventually.</strong> You'll notice some people have a checkmark-style address like <code>name@primal.net</code>. That's NIP-05 verification: a human-readable name that proves an npub belongs to whoever controls that domain. It's not required on day one. Primal gives you one easily; custom domains can come later. Worth doing in your first week, not your first hour.</p>
+                <p><strong>Follow some people.</strong> An empty feed is why most people bounce off new networks, so here is the actual starter list I give our members. Search any of these in your client — the <code>name@domain</code> form works in every search box:</p>
+                <table>
+                    <thead><tr><th>Who</th><th>Find them</th></tr></thead>
+                    <tbody>
+                        <tr><td>Max (that's me)</td><td><code>Max@snort.social</code></td></tr>
+                        <tr><td>Roya</td><td><code>roya@primal.net</code></td></tr>
+                        <tr><td>Derek Ross</td><td><code>derekross@grownostr.org</code></td></tr>
+                        <tr><td>Rockstar dev</td><td><code>rockstar@primal.net</code></td></tr>
+                        <tr><td>Super Testnet</td><td><code class="npub">npub1yxp7j36cfqws7yj0hkfu2mx25308u4zua6ud22zglxp98ayhh96s8c399s</code></td></tr>
+                        <tr><td>Evan Kaloudis (builds Zeus)</td><td><code>evan@zeusln.com</code></td></tr>
+                        <tr><td>jack</td><td><code>jack@primal.net</code></td></tr>
+                        <tr><td>CARLA</td><td><code>carla@nostrplebs.com</code></td></tr>
+                        <tr><td>walker</td><td><code>walker@primal.net</code></td></tr>
+                        <tr><td>preston</td><td><code>preston@primal.net</code></td></tr>
+                        <tr><td>Lyn Alden</td><td><code>lyn@primal.net</code></td></tr>
+                        <tr><td>ODELL</td><td><code>odell@primal.net</code></td></tr>
+                        <tr><td>MartyBent</td><td><code>marty@primal.net</code></td></tr>
+                    </tbody>
+                </table>
+                <p class="aside">(The full list with every npub is in this repository as <a href="starter-follows-list.md">starter-follows-list.md</a>, so you can copy-paste instead of typing.)</p>
+                <p><strong>Say hello.</strong> Write a first post introducing yourself and tag it <strong>#introductions</strong>. The custom on Nostr is that people actually read that tag and welcome newcomers, and you'll likely get replies and a few follows within the day. You'll also see people posting "GM" every morning. It means what you think it means. Yes, everyone does it. You'll cave eventually.</p>
+            </section>
+
+            <section id="zaps" class="part">
+                <h2><span class="part-num">5</span> Zaps: where the value flows</h2>
+                <p class="part-lede">Zaps are Nostr's native economy: Lightning payments — real bitcoin, tiny amounts — attached directly to posts.</p>
+                <p>Instead of an algorithm deciding what you see based on ad revenue, people signal value by actually sending some. Post something useful and strangers might zap you 21, 210, or 2,100 sats. It changes the texture of the whole network, and it's the thing screenshots can't convey. You have to receive one.</p>
+                <p>Getting set up has a ladder, and you should be honest with yourself about which rung you're on:</p>
+                <p><strong>Rung 1, the easy start: the wallet built into your client.</strong> Primal ships with one. It's custodial, meaning someone else technically holds those sats, which is completely fine for pocket change while you learn. Turn it on, and you can send and receive zaps today.</p>
+                <p><strong>Rung 2, the smart middle: <a href="https://zeusln.com" target="_blank" rel="noopener noreferrer">Zeus</a> with Cashu.</strong> Zeus is a serious Bitcoin wallet built by Evan Kaloudis, a good friend of our meetup, and its newest trick is receiving zaps with no Lightning channel and no setup, using Cashu ecash. The honest caveat: ecash means trusting the mint that issues it, so treat it like cash in your pocket, not your savings. What makes Zeus the right middle rung is that it pushes you up the ladder: as your balance grows, the app itself nudges you toward real self-custody.</p>
+                <p><strong>Rung 3, the real thing: your own Lightning setup.</strong> Your own node, your own channels, nobody to trust. It's a deeper project than this guide, and you don't need it this month. When you're ready, you'll know, and the people on your new feed will happily point the way.</p>
+                <div class="callout">
+                    <p>To send your first zap: find a post you like, tap the lightning bolt, pick an amount, confirm. To receive one: post something worth zapping. That's genuinely the whole tutorial.</p>
+                </div>
+            </section>
+
+            <section id="beyond" class="part">
+                <h2><span class="part-num">6</span> Beyond the feed</h2>
+                <p>The "decentralized Twitter" framing sells Nostr short. The same keypair that signs your posts signs everything else, and there's a whole ecosystem of apps that have nothing to do with timelines. The directory to browse is <a href="https://nostrapps.com" target="_blank" rel="noopener noreferrer"><strong>nostrapps.com</strong></a>: marketplaces like Shopstr and Plebeian Market, long-form blogging, music and video streaming, group chats, wikis, file sharing, all filterable by platform, all working with the identity you made in Part 1.</p>
+                <p>Three worth trying once you're comfortable: a marketplace (buy or sell something small for sats), a long-form platform (your blog, uncensorable), and a streaming app (zaps flowing to a live performer is something to see at least once).</p>
+                <p>And if you want to see how far this idea goes: there's a project called <a href="https://github.com/jmcorgan/fips" target="_blank" rel="noopener noreferrer">FIPS</a> building a mesh network where your npub isn't just your social handle, it's your network address, aiming below the apps at the internet plumbing itself. We track it weekly at the meetup. The keys you just backed up on paper might end up being more load-bearing than you think.</p>
+            </section>
+
+            <section id="troubleshooting" class="part">
+                <h2><span class="part-num">7</span> When things go wrong</h2>
+                <p><strong>"I lost my nsec."</strong> That identity is gone. Nobody can recover it, and that's the honest price of nobody being able to take it from you either. Make a new keypair, do the paper backup you skipped last time, and post from the new account telling your follows to migrate. It stings once; almost nobody lets it happen twice.</p>
+                <p><strong>"My posts aren't showing up for a friend."</strong> You two probably don't share a relay. In your client settings, add a couple of the big popular relays (your client will suggest some), and have your friend do the same. This fixes it nearly every time.</p>
+                <p><strong>"Someone is impersonating me."</strong> There's no report button and no company to appeal to; that cuts both ways. Your defenses are NIP-05 verification (<a href="#first-hour">Part 4</a>), your posting history, and the fact that only you can sign with your key. Impersonators can copy a picture; they can't copy a signature.</p>
+                <p><strong>"Do I have to use the bitcoin stuff?"</strong> No. Zaps are optional, and plenty of people use Nostr purely as a social network. But the money layer is where Nostr stops feeling like a Twitter clone and starts feeling like something new, so I'd give it one week before deciding it's not for you.</p>
+            </section>
+
+            <section id="offline" class="part">
+                <h2><span class="part-num">8</span> Take this guide with you</h2>
+                <p>This guide is itself built the way Nostr apps should be: plain HTML, no build step, no tracking, nothing phoning home.</p>
+                <ol class="rules">
+                    <li>On the GitHub repository page, click the green <strong>Code</strong> button.</li>
+                    <li>Choose <strong>Download ZIP</strong>.</li>
+                    <li>Unzip it anywhere, and open <code>index.html</code>.</li>
+                </ol>
+                <p>The whole guide, working, on any device, forever, no internet required. Hand it to someone on a USB stick if you like. That's not a gimmick; it's the point of the entire exercise. Own your keys, own your feed, own your copy of the manual.</p>
+                <p>Questions? Bring them to the weekly meetup, or open an issue on the repository. See you on the other side. <span class="purple"><strong>GM.</strong></span></p>
+            </section>
+
+            <section id="links" class="part">
+                <h2><span class="part-num">9</span> Every link in this guide</h2>
+                <table>
+                    <thead><tr><th>Link</th><th>What it is</th></tr></thead>
+                    <tbody>
+                        <tr><td><a href="https://damus.io" target="_blank" rel="noopener noreferrer">damus.io</a></td><td>Damus — iOS client</td></tr>
+                        <tr><td><a href="https://primal.net" target="_blank" rel="noopener noreferrer">primal.net</a></td><td>Primal — all-platform client with built-in wallet</td></tr>
+                        <tr><td><a href="https://amethyst.social/" target="_blank" rel="noopener noreferrer">amethyst.social</a></td><td>Amethyst — Max's favorite Android client, by Vitor Pamplona</td></tr>
+                        <tr><td><a href="https://nostrudel.ninja" target="_blank" rel="noopener noreferrer">nostrudel.ninja</a></td><td>noStrudel — power-user web client</td></tr>
+                        <tr><td><a href="https://coracle.social" target="_blank" rel="noopener noreferrer">coracle.social</a></td><td>Coracle — web client</td></tr>
+                        <tr><td><a href="https://github.com/fiatjaf/nos2x" target="_blank" rel="noopener noreferrer">nos2x</a></td><td>Desktop signer extension (NIP-07) — <a href="https://chromewebstore.google.com/detail/nos2x/kpgefcfmnafjgpblomihpgmejjdanjjp" target="_blank" rel="noopener noreferrer">Chrome Web Store</a></td></tr>
+                        <tr><td><a href="https://github.com/greenart7c3/Amber" target="_blank" rel="noopener noreferrer">Amber</a></td><td>Android signer (NIP-46)</td></tr>
+                        <tr><td><a href="https://zeusln.com" target="_blank" rel="noopener noreferrer">zeusln.com</a></td><td>Zeus — Bitcoin/Lightning wallet with Cashu ecash</td></tr>
+                        <tr><td><a href="https://nostrapps.com" target="_blank" rel="noopener noreferrer">nostrapps.com</a></td><td>The Nostr app directory</td></tr>
+                        <tr><td><a href="https://nostr.how/en/get-started" target="_blank" rel="noopener noreferrer">nostr.how</a></td><td>A second-opinion beginner guide</td></tr>
+                        <tr><td><a href="https://github.com/jmcorgan/fips" target="_blank" rel="noopener noreferrer">FIPS</a></td><td>The Nostr-native mesh network we track weekly</td></tr>
+                        <tr><td><a href="starter-follows-list.md">starter-follows-list.md</a></td><td>The follow list with full npubs (in this repo)</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <footer class="guide-footer">
+                <p>Written and maintained by Max Sikorski for the Bitcoin &amp; Nostr weekly meetup.</p>
+                <p>MIT licensed — take it, translate it, hand it out.</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
